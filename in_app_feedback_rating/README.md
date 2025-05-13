@@ -29,7 +29,74 @@ TODO: Include short and useful examples for package users. Add longer examples
 to `/example` folder.
 
 ```dart
-const like = 'sample';
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  MyApp({super.key});
+
+  final GlobalKey<ScaffoldMessengerState> _messengerKey =
+  GlobalKey<ScaffoldMessengerState>();
+
+  RxString ratingValue = "".obs;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      scaffoldMessengerKey: _messengerKey,
+      home: Scaffold(
+        appBar: AppBar(title: Text("In-App Feedback Test")),
+        body: Center(
+          child: Column(
+            children: [
+              InAppFeedbackRating(
+                // feedbackHint: "Enter Feedback Here",
+                // ratingHint: "Rating Here",
+                submitButtonText: "Submit",
+                onRatingSubmitted: (rating) {
+                  print("Rating: $rating");
+
+                  ratingValue.value = rating.toString();
+                },
+                onFeedbackSubmitted: (feedback) {
+                  print("Feedback: $feedback");
+                },
+                onFeedbackRatingSubmitted: () {
+                  print("Feedback and Rating Submitted!");
+
+                  // Show SnackBar using the global key
+                  _messengerKey.currentState?.showSnackBar(
+                    SnackBar(
+                      content: Text('Rating ${ratingValue.value} submitted!'),
+                    ),
+                  );
+                  // Show a SnackBar when the button is pressed
+                  /*    ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Feedback and Rating submitted!'),
+                      duration: Duration(seconds: 2),
+                      // Duration of the SnackBar
+                      backgroundColor: Colors.blue,
+                      // Background color of SnackBar
+                      action: SnackBarAction(
+                        label: 'UNDO',
+                        onPressed: () {
+                          // Handle the action, like undoing the change
+                          print('Undo action');
+                        },
+                      ),
+                    ),
+                  );*/
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 ```
 
 ## Additional information
